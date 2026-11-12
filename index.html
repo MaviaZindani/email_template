@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job application email kit – Mavia Zindani</title>
+<style>
+  :root {
+    --ink: #0b0f0d;
+    --accent: #15803d;
+    --slate: #5d6a63;
+    --mist: #f1f5f2;
+    --line: #dde5df;
+    --bad: #b42318;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0;
+    background: var(--mist);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 28px 16px 64px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 0 0 12px; }
+  .sub { margin: 0 0 22px; color: var(--slate); font-size: 14px; }
+  .panel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .fields .full { grid-column: 1 / -1; }
+  .proj { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 10px; margin-bottom: 10px; }
+  label { display: block; font-size: 12px; color: var(--slate); margin-bottom: 4px; }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 84px; line-height: 1.5; }
+  input[type="text"]:focus-visible, textarea:focus-visible,
+  button:focus-visible, input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .warn { margin: 10px 0 0; font-size: 13px; color: var(--bad); }
+  .row { display: flex; gap: 10px; align-items: flex-end; }
+  .row .grow { flex: 1; }
+  .bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .groups { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .tabs button {
+    border: 0;
+    background: #fff;
+    color: var(--slate);
+    padding: 9px 14px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .tabs button + button { border-left: 1px solid var(--line); }
+  .tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .copy {
+    border: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .copy:hover { background: #166534; }
+  .copy:disabled { background: #0f5c2c; cursor: default; }
+  .preview {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+    overflow: auto;
+    background: #fff;
+  }
+  .note { font-size: 13px; color: var(--slate); margin: 12px 0 0; }
+  .meta { font-size: 13px; color: var(--slate); }
+  .meta.bad, .count.bad { color: var(--bad); }
+  .glabel { font-size: 12px; color: var(--slate); margin: 10px 0 6px; }
+  .chipbtn {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--slate);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0 6px 6px 0;
+  }
+  .chipbtn[aria-pressed="true"] { background: #eaf7ee; border-color: #bfe3cb; color: #14532d; }
+  .chipbtn[aria-pressed="false"] { text-decoration: line-through; opacity: 0.7; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--ink); margin: 0 0 10px; cursor: pointer; }
+  .check input { margin-top: 4px; accent-color: var(--accent); }
+  code { background: var(--mist); padding: 1px 6px; border-radius: 5px; font-size: 13px; }
+  @media (max-width: 640px) {
+    .fields { grid-template-columns: 1fr; }
+    .proj { grid-template-columns: 1fr; }
+    .row { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Job application email kit</h1>
+  <p class="sub">Version chuno, details bharo, Copy dabao, phir Gmail compose mein paste karo.</p>
+ 
+  <div class="panel">
+    <div class="bar" style="margin-bottom:0;">
+      <div class="tabs" id="verTabs" role="group" aria-label="Version">
+        <button type="button" data-ver="fullstack" aria-pressed="true">Full Stack version</button>
+        <button type="button" data-ver="flutter" aria-pressed="false">Flutter version</button>
+      </div>
+      <span class="meta">Har version apni position, skills, projects aur resume link yaad rakhta hai.</span>
+    </div>
+  </div>
+ 
+  <div class="panel">
+    <h2>Is application ki details</h2>
+    <div class="fields">
+      <div>
+        <label for="company">Company name</label>
+        <input id="company" type="text" placeholder="e.g. Techling" autocomplete="off">
+      </div>
+      <div>
+        <label for="position">Position</label>
+        <input id="position" type="text" autocomplete="off">
+      </div>
+      <div>
+        <label for="greet">Greeting (naam ya Hiring Manager)</label>
+        <input id="greet" type="text" value="Hiring Manager" autocomplete="off">
+      </div>
+      <div>
+        <label for="resume">Resume link (optional)</label>
+        <input id="resume" type="text" placeholder="Google Drive or Dropbox share link" autocomplete="off">
+      </div>
+      <div class="full">
+        <label for="why">Yeh company kyun (ek line, optional)</label>
+        <input id="why" type="text" placeholder="e.g. I use your app daily and like how fast the booking flow is." autocomplete="off">
+      </div>
+      <div class="full">
+        <label for="proof">Numbers ya proof (ek line, optional)</label>
+        <input id="proof" type="text" placeholder="e.g. Apps shipped, users, rating, downloads." autocomplete="off">
+      </div>
+    </div>
+    <p id="warn" class="warn">Company name khali hai. Email mein [Company name] likha aayega, bhejne se pehle bhar lo.</p>
+    <div class="bar" style="margin:14px 0 0;">
+      <div class="tabs" id="lenTabs" role="group" aria-label="Email length">
+        <button type="button" data-len="short" aria-pressed="true">Short (recommended)</button>
+        <button type="button" data-len="full" aria-pressed="false">Full</button>
+      </div>
+      <span class="meta" id="wc"></span>
+    </div>
+    <p class="note">Company aur greeting har bar naye bharne parte hain, taake purani company ka naam galti se na chala jaye. Resume file Gmail mein paperclip se attach hoti hai, yeh link sirf "View resume" button ke liye hai.</p>
+  </div>
+ 
+  <div class="panel">
+    <h2>Skills (click karke on/off karo)</h2>
+    <div id="skills"></div>
+    <p class="note">Jo skill off hogi woh email ki body, chips aur LinkedIn note mein nahi aayegi.</p>
+  </div>
+ 
+  <div class="panel">
+    <h2>Projects (optional, max 3)</h2>
+    <div class="proj">
+      <div><label for="p1n">Project 1 name</label><input id="p1n" type="text" autocomplete="off"></div>
+      <div><label for="p1l">Link</label><input id="p1l" type="text" placeholder="Play Store, App Store, GitHub or site" autocomplete="off"></div>
+      <div><label for="p1d">One line about it</label><input id="p1d" type="text" autocomplete="off"></div>
+    </div>
+    <div class="proj">
+      <div><label for="p2n">Project 2 name</label><input id="p2n" type="text" autocomplete="off"></div>
+      <div><label for="p2l">Link</label><input id="p2l" type="text" autocomplete="off"></div>
+      <div><label for="p2d">One line about it</label><input id="p2d" type="text" autocomplete="off"></div>
+    </div>
+    <div class="proj" style="margin-bottom:0;">
+      <div><label for="p3n">Project 3 name</label><input id="p3n" type="text" autocomplete="off"></div>
+      <div><label for="p3l">Link</label><input id="p3l" type="text" autocomplete="off"></div>
+      <div><label for="p3d">One line about it</label><input id="p3d" type="text" autocomplete="off"></div>
+    </div>
+    <p class="note">Jis project ka naam khali hoga woh email mein nahi aayega. Live Play Store ya App Store links sab se zyada kaam karte hain.</p>
+  </div>
+ 
+  <div class="panel">
+    <div class="row">
+      <div class="grow">
+        <label for="subject">Subject line</label>
+        <input id="subject" type="text" readonly>
+      </div>
+      <button class="copy" id="copySubject" type="button">Copy subject</button>
+    </div>
+  </div>
+ 
+  <div class="panel">
+    <div class="bar">
+      <div class="groups">
+        <div class="tabs" role="group" aria-label="Email style">
+          <button type="button" id="tabCard" aria-pressed="true">TaxiDex style</button>
+          <button type="button" id="tabClean" aria-pressed="false">Clean style</button>
+        </div>
+        <div class="tabs" id="themeTabs" role="group" aria-label="Theme">
+          <button type="button" data-theme="black" aria-pressed="true">Black header</button>
+          <button type="button" data-theme="light" aria-pressed="false">Light</button>
+          <button type="button" data-theme="dark" aria-pressed="false">Full black</button>
+        </div>
+      </div>
+      <button class="copy" id="copyEmail" type="button">Copy email</button>
+    </div>
+    <div class="preview"><div id="email"></div></div>
+    <p class="note">Gmail compose kholo, body mein click karo, phir Cmd+V (Windows: Ctrl+V). <span id="links" class="meta"></span></p>
+  </div>
+ 
+  <div class="panel">
+    <div class="bar">
+      <h2 style="margin:0;">Signature only</h2>
+      <button class="copy" id="copySig" type="button">Copy signature</button>
+    </div>
+    <div class="preview"><div id="sig"></div></div>
+    <p class="note">Permanent signature ke liye: Gmail Settings, See all settings, General, Signature mein paste karo.</p>
+  </div>
+ 
+  <div class="panel">
+    <div class="bar">
+      <h2 style="margin:0;">Follow-up email (5 se 7 din baad)</h2>
+      <button class="copy" id="copyFollow" type="button">Copy follow-up</button>
+    </div>
+    <div class="row" style="margin-bottom:14px;">
+      <div class="grow">
+        <label for="sent">Application kab bheji thi (optional)</label>
+        <input id="sent" type="text" placeholder="e.g. 12 November" autocomplete="off">
+      </div>
+      <button class="copy" id="copyFollowSubject" type="button">Copy subject</button>
+    </div>
+    <div class="preview"><div id="follow"></div></div>
+    <p class="note">Behtar hai ke follow-up pehli email ke jawab (Reply) mein bhejo, taake purani email aur "Re:" subject saath rahe.</p>
+    <input id="followSubject" type="text" readonly hidden>
+  </div>
+ 
+  <div class="panel">
+    <div class="bar">
+      <h2 style="margin:0;">LinkedIn connection note</h2>
+      <button class="copy" id="copyLi" type="button">Copy note</button>
+    </div>
+    <textarea id="li" readonly></textarea>
+    <p class="note"><span id="liCount" class="count"></span> LinkedIn ke connection note ki limit 300 characters hai, jahan tak mujhe pata hai. Bhejne se pehle LinkedIn par confirm kar lena.</p>
+  </div>
+ 
+  <div class="panel">
+    <h2>Bhejne se pehle</h2>
+    <label class="check"><input type="checkbox"> Company ka naam aur recipient sahi hain</label>
+    <label class="check"><input type="checkbox"> Resume PDF attach hai, 1 MB se kam, naam: <code id="fname"></code></label>
+    <label class="check"><input type="checkbox"> Saare links khol kar check kiye (LinkedIn, GitHub, projects)</label>
+    <label class="check"><input type="checkbox"> Pehle apne dusre email par test bheja aur phone mein dekha</label>
+    <label class="check"><input type="checkbox"> Recipient koi asli insaan hai (recruiter ya team lead), sirf hr@ nahi</label>
+    <label class="check"><input type="checkbox"> Subah ke waqt ke liye Schedule send laga diya</label>
+    <p class="note">Ek hi waqt mein bohat saari companies ko mat bhejo, Gmail isay spam samajh sakta hai.</p>
+  </div>
+</div>
+ 
+<script>
+(function () {
+  var P = {
+    name: "Mavia Zindani",
+    initials: "MZ",
+    title: "Mobile Application Developer",
+    stack: "Flutter, Kotlin &amp; Swift",
+    phone: "+92 335 0772255",
+    tel: "+923350772255",
+    email: "maviazindaninfo@gmail.com",
+    city: "Karachi, Pakistan",
+    linkedin: "https://www.linkedin.com/in/mavia-zindani-89826723b/",
+    github: "https://github.com/MaviaZindani"
+  };
+ 
+  var GROUPS = [
+    { label: "Mobile", items: ["Flutter", "Dart", "Kotlin", "iOS"] },
+    { label: "Backend", items: ["Node.js", "Python", "SQL", "Firebase", "API integration"] },
+    { label: "AI tools", items: ["Claude", "Cursor"] }
+  ];
+ 
+  var PRESETS = {
+    fullstack: { position: "Full Stack Developer", off: [] },
+    flutter: { position: "Flutter Developer", off: ["Node.js", "Python", "SQL"] }
+  };
+ 
+  var THEMES = {
+    black: {
+      outer: "#e9eeeb", cardBg: "#ffffff", border: "#d9e1dc",
+      headBg: "#0b0f0d", headText: "#ffffff", markBg: "#22c55e", markText: "#0b0f0d", wordAccent: "#4ade80", bar: "#22c55e",
+      text: "#151a17", muted: "#5d6a63", link: "#15803d",
+      chipBg: "#eaf7ee", chipText: "#14532d", chipBorder: "#bfe3cb",
+      boxBg: "#f1f8f3", boxBorder: "#bfe3cb",
+      btnBg: "#15803d", btnText: "#ffffff", btn2Bg: "#0b0f0d", btn2Text: "#ffffff", btn2Border: "#0b0f0d",
+      footBg: "#0b0f0d", footText: "#b4c2ba", footLink: "#4ade80", footName: "#ffffff"
+    },
+    light: {
+      outer: "#e8efea", cardBg: "#fbfcfb", border: "#dae3dd",
+      headBg: "#fbfcfb", headText: "#0b0f0d", markBg: "#0b0f0d", markText: "#4ade80", wordAccent: "#16a34a", bar: "#16a34a",
+      text: "#151a17", muted: "#5d6a63", link: "#15803d",
+      chipBg: "#eaf7ee", chipText: "#14532d", chipBorder: "#bfe3cb",
+      boxBg: "#ecf7ef", boxBorder: "#b9dcc3",
+      btnBg: "#15803d", btnText: "#ffffff", btn2Bg: "#0b0f0d", btn2Text: "#ffffff", btn2Border: "#0b0f0d",
+      footBg: "#f2f7f4", footText: "#4b5a52", footLink: "#15803d", footName: "#151a17"
+    },
+    dark: {
+      outer: "#050706", cardBg: "#101512", border: "#1f2a24",
+      headBg: "#101512", headText: "#ffffff", markBg: "#22c55e", markText: "#07110b", wordAccent: "#4ade80", bar: "#22c55e",
+      text: "#e6ede8", muted: "#9aaaa0", link: "#4ade80",
+      chipBg: "#16221a", chipText: "#86efac", chipBorder: "#24402e",
+      boxBg: "#14201a", boxBorder: "#24402e",
+      btnBg: "#22c55e", btnText: "#07110b", btn2Bg: "#1b2420", btn2Text: "#e6ede8", btn2Border: "#2c3a32",
+      footBg: "#0b0f0d", footText: "#9aaaa0", footLink: "#4ade80", footName: "#ffffff"
+    }
+  };
+ 
+  var F = "'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+  var style = "card", theme = "black", length = "short", cur = "fullstack";
+  var profiles = {};
+  var STORE = "mz-email-v3";
+ 
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function url(u) {
+    u = (u || "").trim();
+    if (!u) return "";
+    if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+    return esc(u);
+  }
+  function joinList(a) {
+    if (a.length <= 1) return a.join("");
+    if (a.length === 2) return a[0] + " and " + a[1];
+    return a.slice(0, -1).join(", ") + ", and " + a[a.length - 1];
+  }
+ 
+  /* ---------- profiles ---------- */
+  function freshProfile(key) {
+    var off = PRESETS[key].off, sk = {};
+    GROUPS.forEach(function (g) { g.items.forEach(function (i) { sk[i] = off.indexOf(i) === -1; }); });
+    return {
+      position: PRESETS[key].position,
+      resume: "",
+      skills: sk,
+      projects: [{ n: "", l: "", d: "" }, { n: "", l: "", d: "" }, { n: "", l: "", d: "" }]
+    };
+  }
+  Object.keys(PRESETS).forEach(function (k) { profiles[k] = freshProfile(k); });
+ 
+  function on(name) { return profiles[cur].skills[name] !== false; }
+  function enabledIn(list) { return list.filter(on); }
+  function allEnabled() {
+    var out = [];
+    GROUPS.forEach(function (g) { out = out.concat(enabledIn(g.items)); });
+    return out;
+  }
+ 
+  function inputsToProfile() {
+    var pr = profiles[cur];
+    pr.position = $("position").value;
+    pr.resume = $("resume").value;
+    for (var i = 1; i <= 3; i++) {
+      pr.projects[i - 1] = { n: $("p" + i + "n").value, l: $("p" + i + "l").value, d: $("p" + i + "d").value };
+    }
+  }
+  function profileToInputs() {
+    var pr = profiles[cur];
+    $("position").value = pr.position;
+    $("resume").value = pr.resume;
+    for (var i = 1; i <= 3; i++) {
+      var p = pr.projects[i - 1];
+      $("p" + i + "n").value = p.n; $("p" + i + "l").value = p.l; $("p" + i + "d").value = p.d;
+    }
+  }
+ 
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify({ cur: cur, profiles: profiles, style: style, theme: theme, length: length })); } catch (e) {}
+  }
+  function load() {
+    try {
+      var o = JSON.parse(localStorage.getItem(STORE) || "{}");
+      Object.keys(PRESETS).forEach(function (k) {
+        var s = o.profiles && o.profiles[k];
+        if (!s) return;
+        var base = profiles[k];
+        if (typeof s.position === "string") base.position = s.position;
+        if (typeof s.resume === "string") base.resume = s.resume;
+        if (s.skills) Object.keys(base.skills).forEach(function (n) { if (typeof s.skills[n] === "boolean") base.skills[n] = s.skills[n]; });
+        if (Array.isArray(s.projects)) for (var i = 0; i < 3; i++) {
+          var p = s.projects[i];
+          if (p) base.projects[i] = { n: String(p.n || ""), l: String(p.l || ""), d: String(p.d || "") };
+        }
+      });
+      if (PRESETS[o.cur]) cur = o.cur;
+      if (o.style === "clean" || o.style === "card") style = o.style;
+      if (THEMES[o.theme]) theme = o.theme;
+      if (o.length === "short" || o.length === "full") length = o.length;
+    } catch (e) {}
+  }
+ 
+  /* ---------- values and copy text ---------- */
+  function vals() {
+    var pr = profiles[cur];
+    var projects = [];
+    pr.projects.forEach(function (p) {
+      if (p.n.trim()) projects.push({ name: esc(p.n.trim()), link: url(p.l), desc: esc(p.d.trim()) });
+    });
+    return {
+      company: $("company").value.trim() || "[Company name]",
+      position: (pr.position || "").trim() || PRESETS[cur].position,
+      greet: $("greet").value.trim() || "Hiring Manager",
+      resume: url(pr.resume),
+      why: $("why").value.trim(),
+      proof: $("proof").value.trim(),
+      projects: projects
+    };
+  }
+ 
+  function bodyParas(v) {
+    var mobile = enabledIn(["Flutter", "Dart", "Kotlin", "iOS"]);
+    var langs = enabledIn(["Node.js", "Python", "SQL"]);
+    var ai = enabledIn(["Claude", "Cursor"]);
+    var api = on("API integration");
+    var fb = on("Firebase");
+    var pos = "<strong>" + esc(v.position) + "</strong>", co = "<strong>" + esc(v.company) + "</strong>";
+    var out = [];
+ 
+    if (length === "full") {
+      var p1 = "I am applying for the " + pos + " position at " + co + ". With 4+ years of professional experience in software and application development, I bring strong expertise in " +
+        (mobile.length ? "cross-platform mobile development (" + mobile.join(", ") + ")" : "software development") +
+        ((langs.length || api) ? ", alongside robust backend and API integration capabilities" + (langs.length ? " using " + joinList(langs) : "") : "") + ".";
+      out.push(p1);
+    } else {
+      var s1 = "I am applying for the " + pos + " position at " + co + ". I have 4+ years of experience in " +
+        (mobile.length ? "cross-platform mobile development with " + joinList(mobile) : "software and application development") +
+        (langs.length ? ", plus backend and API work with " + joinList(langs) : (api ? ", plus API integration work" : "")) + ".";
+      if (ai.length) s1 += " I also use AI tools such as " + joinList(ai) + " to build and ship faster.";
+      out.push(s1);
+    }
+ 
+    if (v.why) out.push(esc(v.why));
+    if (v.proof) out.push(esc(v.proof));
+ 
+    if (length === "full") {
+      var items = ["building scalable architectures", "optimizing performance"];
+      if (fb) items.push("integrating Firebase services");
+      items.push("designing seamless end-to-end solutions");
+      var p2 = "Throughout my career, I have specialized in " + joinList(items) + ".";
+      if (ai.length) p2 += " I also use AI tools such as " + joinList(ai) + " to build and ship faster.";
+      out.push(p2);
+    }
+    return out;
+  }
+ 
+  function closingText() {
+    return "I am open to remote or on-site opportunities. My resume is attached for your review." + (length === "short" ? " I would welcome the chance to talk." : "");
+  }
+ 
+  function plainWords(htmlList) {
+    var d = document.createElement("div");
+    d.innerHTML = htmlList.join(" ");
+    var t = (d.textContent || "").trim();
+    return t ? t.split(/\s+/).length : 0;
+  }
+ 
+  function contactRows(fs) {
+    var lab = "color:#5d6a63;padding:0 14px 0 0;";
+    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="font-family:' + F + ';font-size:' + fs + 'px;line-height:22px;">' +
+      '<tr><td style="' + lab + '">Phone</td><td><a href="tel:' + P.tel + '" style="color:#0b0f0d;text-decoration:none;">' + P.phone + '</a></td></tr>' +
+      '<tr><td style="' + lab + '">Email</td><td><a href="mailto:' + P.email + '" style="color:#0b0f0d;text-decoration:none;">' + P.email + '</a></td></tr>' +
+      '<tr><td style="' + lab + '">Location</td><td style="color:#0b0f0d;">' + P.city + '</td></tr>' +
+      '</table>';
+  }
+ 
+  function avatar(size, bg, fg, fs) {
+    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td width="' + size + '" height="' + size + '" align="center" valign="middle" style="width:' + size + 'px;height:' + size + 'px;background:' + bg + ';border-radius:' + Math.round(size / 3.2) + 'px;color:' + fg + ';font-family:' + F + ';font-size:' + fs + 'px;font-weight:800;letter-spacing:0.5px;">' + P.initials + '</td>' +
+      '</tr></table>';
+  }
+ 
+  function sigHtml() {
+    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:' + F + ';">' +
+      '<tr>' +
+      '<td valign="top" style="padding:0 16px 0 0;">' + avatar(56, "#0b0f0d", "#4ade80", 19) + '</td>' +
+      '<td valign="top" style="border-left:3px solid #16a34a;padding:2px 0 2px 16px;">' +
+        '<div style="font-size:18px;font-weight:700;color:#0b0f0d;line-height:22px;">' + P.name + '</div>' +
+        '<div style="font-size:13px;font-weight:600;color:#0b0f0d;line-height:20px;">' + P.title + '</div>' +
+        '<div style="font-size:13px;color:#5d6a63;line-height:20px;margin-bottom:8px;">' + P.stack + '</div>' +
+        contactRows(13) +
+        '<div style="margin-top:8px;font-size:13px;line-height:20px;">' +
+          '<a href="' + P.linkedin + '" style="color:#15803d;text-decoration:none;font-weight:600;">LinkedIn</a>' +
+          '<span style="color:#b5c0b9;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>' +
+          '<a href="' + P.github + '" style="color:#15803d;text-decoration:none;font-weight:600;">GitHub</a>' +
+        '</div>' +
+      '</td>' +
+      '</tr></table>';
+  }
+ 
+  /* ---------- Clean style ---------- */
+  function cleanEmail(v) {
+    var p = "margin:0 0 14px 0;font-size:15px;line-height:1.65;color:#1c211e;font-family:" + F + ";";
+    var html = '<div style="font-family:' + F + ';max-width:620px;">';
+    html += '<p style="' + p + '">Dear ' + esc(v.greet) + ',</p>';
+    bodyParas(v).forEach(function (t) { html += '<p style="' + p + '">' + t + '</p>'; });
+    html += '<p style="' + p + '"><strong>Tech stack:</strong> ' + allEnabled().join(", ") + '.</p>';
+ 
+    if (v.projects.length) {
+      html += '<p style="' + p + 'margin-bottom:8px;"><strong>Selected projects:</strong></p>';
+      v.projects.forEach(function (pr) {
+        var nm = pr.link
+          ? '<a href="' + pr.link + '" style="color:#15803d;font-weight:600;">' + pr.name + '</a>'
+          : '<strong>' + pr.name + '</strong>';
+        html += '<p style="' + p + 'margin-bottom:6px;">' + nm + (pr.desc ? ' &ndash; ' + pr.desc : '') + '</p>';
+      });
+      html += '<div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>';
+    }
+ 
+    html += '<p style="' + p + '">' + closingText() + '</p>';
+    if (v.resume) html += '<p style="' + p + '">Resume link: <a href="' + v.resume + '" style="color:#15803d;font-weight:600;">View resume</a></p>';
+    html += '<p style="' + p + 'margin-bottom:22px;">Best regards,</p>';
+    html += sigHtml();
+    html += '</div>';
+    return html;
+  }
+ 
+  /* ---------- TaxiDex style ---------- */
+  function cardEmail(v) {
+    var T = THEMES[theme];
+    var ff = "Roboto,'Segoe UI',Helvetica,Arial,sans-serif";
+    var p = "margin:0 0 16px 0;font-family:" + ff + ";font-size:16px;line-height:1.65;color:" + T.text + ";";
+ 
+    function chip(c) {
+      return '<span style="display:inline-block;background:' + T.chipBg + ';color:' + T.chipText + ';border:1px solid ' + T.chipBorder + ';border-radius:999px;padding:3px 11px;margin:0 6px 6px 0;font-family:' + ff + ';font-size:13px;font-weight:600;line-height:18px;">' + c + '</span>';
+    }
+    function btn(href, label, bg, color, border) {
+      return '<a href="' + href + '" style="display:inline-block;background:' + bg + ';color:' + color + ';border:1px solid ' + border + ';text-decoration:none;font-family:' + ff + ';font-size:14px;font-weight:600;line-height:20px;padding:10px 20px;border-radius:10px;margin:0 10px 10px 0;">' + label + '</a>';
+    }
+ 
+    var header =
+      '<tr><td style="background:' + T.headBg + ';padding:28px 36px 30px 36px;border-radius:20px 20px 0 0;">' +
+        '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>' +
+          '<td valign="middle">' + avatar(38, T.markBg, T.markText, 15) + '</td>' +
+          '<td valign="middle" style="padding-left:10px;font-family:' + ff + ';font-size:24px;font-weight:800;letter-spacing:-0.4px;line-height:30px;color:' + T.headText + ';">Mavia <span style="color:' + T.wordAccent + ';">Zindani</span></td>' +
+        '</tr></table>' +
+        '<div style="margin:26px 0 0 0;font-family:' + ff + ';font-size:28px;font-weight:800;line-height:1.2;letter-spacing:-0.5px;color:' + T.headText + ';">' +
+          'Application for ' + esc(v.position) + ' at <span style="color:' + T.wordAccent + ';">' + esc(v.company) + '</span>' +
+        '</div>' +
+      '</td></tr>' +
+      '<tr><td height="4" style="height:4px;line-height:4px;font-size:0;background:' + T.bar + ';">&nbsp;</td></tr>';
+ 
+    var rows = GROUPS.map(function (g) {
+      var items = enabledIn(g.items);
+      if (!items.length) return "";
+      return '<tr><td valign="top" style="width:112px;padding:4px 12px 0 0;font-family:' + ff + ';font-size:13px;line-height:20px;color:' + T.muted + ';">' + g.label + '</td>' +
+             '<td valign="top" style="padding:0;">' + items.map(chip).join("") + '</td></tr>';
+    }).join("");
+    var skills = rows ? '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 8px 0;">' + rows + '</table>' : "";
+ 
+    var projects = "";
+    if (v.projects.length) {
+      projects += '<div style="margin:22px 0 12px 0;font-family:' + ff + ';font-size:16px;font-weight:800;color:' + T.text + ';">Selected projects</div>';
+      v.projects.forEach(function (pr) {
+        var nm = pr.link
+          ? '<a href="' + pr.link + '" style="color:' + T.link + ';font-weight:700;text-decoration:underline;">' + pr.name + '</a>'
+          : '<span style="font-weight:700;color:' + T.text + ';">' + pr.name + '</span>';
+        projects += '<div style="margin:0 0 14px 0;border-left:3px solid ' + T.bar + ';padding:1px 0 1px 14px;font-family:' + ff + ';">' +
+          '<div style="font-size:15px;line-height:1.5;">' + nm + '</div>' +
+          (pr.desc ? '<div style="font-size:14px;line-height:1.55;color:' + T.muted + ';">' + pr.desc + '</div>' : '') +
+          '</div>';
+      });
+    }
+ 
+    var box =
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:10px 0 20px 0;border-collapse:separate;"><tr>' +
+        '<td style="background:' + T.boxBg + ';border:1px solid ' + T.boxBorder + ';border-radius:14px;padding:16px 20px;font-family:' + ff + ';font-size:15px;line-height:1.65;color:' + T.text + ';">' +
+          '<strong>Open to remote or on-site opportunities.</strong> My resume is attached for your review.' + (length === "short" ? ' I would welcome the chance to talk.' : '') +
+        '</td>' +
+      '</tr></table>';
+ 
+    var buttons =
+      (v.resume ? btn(v.resume, "View resume", T.btnBg, T.btnText, T.btnBg) : "") +
+      btn(P.linkedin, "LinkedIn", T.btn2Bg, T.btn2Text, T.btn2Border) +
+      btn(P.github, "GitHub", T.btn2Bg, T.btn2Text, T.btn2Border);
+ 
+    var signoff =
+      '<p style="margin:10px 0 0 0;font-family:' + ff + ';font-size:16px;line-height:1.6;color:' + T.text + ';">Best regards,<br><strong>' + P.name + '</strong></p>';
+ 
+    var footer =
+      '<tr><td style="background:' + T.footBg + ';padding:22px 36px 24px 36px;border-radius:0 0 20px 20px;font-family:' + ff + ';font-size:13px;line-height:1.75;color:' + T.footText + ';">' +
+        '<div style="font-weight:700;color:' + T.footName + ';">' + P.name + '</div>' +
+        '<div>' + P.title + ' &middot; ' + P.city + '</div>' +
+        '<div><a href="tel:' + P.tel + '" style="color:' + T.footLink + ';text-decoration:underline;">' + P.phone + '</a> &middot; ' +
+        '<a href="mailto:' + P.email + '" style="color:' + T.footLink + ';text-decoration:underline;">' + P.email + '</a></div>' +
+      '</td></tr>';
+ 
+    var paras = bodyParas(v).map(function (t) { return '<p style="' + p + '">' + t + '</p>'; }).join("");
+ 
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:' + T.outer + ';font-family:' + ff + ';">' +
+      '<tr><td align="center" style="padding:28px 12px;">' +
+      '<table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0" style="width:620px;max-width:100%;background:' + T.cardBg + ';border:1px solid ' + T.border + ';border-radius:20px;border-collapse:separate;">' +
+        header +
+        '<tr><td style="padding:32px 36px 30px 36px;">' +
+          '<p style="' + p + '">Dear ' + esc(v.greet) + ',</p>' +
+          paras + skills + projects +
+          '<div style="height:6px;line-height:6px;font-size:0;">&nbsp;</div>' +
+          box + buttons + signoff +
+        '</td></tr>' +
+        footer +
+      '</table>' +
+      '</td></tr></table>';
+  }
+ 
+  /* ---------- follow-up and LinkedIn ---------- */
+  function followHtml(v) {
+    var p = "margin:0 0 14px 0;font-size:15px;line-height:1.65;color:#1c211e;font-family:" + F + ";";
+    var sent = $("sent").value.trim();
+    return '<div style="font-family:' + F + ';max-width:620px;">' +
+      '<p style="' + p + '">Dear ' + esc(v.greet) + ',</p>' +
+      '<p style="' + p + '">I wanted to follow up on my application for the <strong>' + esc(v.position) + '</strong> position at <strong>' + esc(v.company) + '</strong>' +
+        (sent ? ', which I sent on ' + esc(sent) : '') + '. I remain very interested in the role and would be glad to share more about my work or answer any questions.</p>' +
+      '<p style="' + p + '">Thank you for your time and consideration.</p>' +
+      '<p style="' + p + 'margin-bottom:22px;">Best regards,</p>' +
+      sigHtml() +
+      '</div>';
+  }
+ 
+  function liNote(v) {
+    var mobile = enabledIn(["Flutter", "Dart", "Kotlin", "iOS"]);
+    var langs = enabledIn(["Node.js", "Python", "SQL"]);
+    var hi = v.greet.toLowerCase() === "hiring manager" ? "Hi there," : "Hi " + v.greet + ",";
+    var t = hi + " I recently applied for the " + v.position + " role at " + v.company + " and would love to connect.";
+    if (mobile.length) {
+      t += " I build cross-platform mobile apps (" + mobile.join(", ") + ")" + (langs.length ? " with " + joinList(langs) + " backends" : "") + ".";
+    }
+    t += " Happy to share my work anytime. Thanks, Mavia";
+    return t;
+  }
+ 
+  /* ---------- rendering ---------- */
+  function renderSkills() {
+    var box = $("skills");
+    box.innerHTML = "";
+    GROUPS.forEach(function (g) {
+      var lab = document.createElement("div");
+      lab.className = "glabel";
+      lab.textContent = g.label;
+      box.appendChild(lab);
+      var wrap = document.createElement("div");
+      g.items.forEach(function (name) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "chipbtn";
+        b.textContent = name;
+        b.setAttribute("aria-pressed", String(on(name)));
+        b.addEventListener("click", function () {
+          profiles[cur].skills[name] = !on(name);
+          b.setAttribute("aria-pressed", String(on(name)));
+          render(); save();
+        });
+        wrap.appendChild(b);
+      });
+      box.appendChild(wrap);
+    });
+  }
+ 
+  function syncTabs() {
+    $("tabCard").setAttribute("aria-pressed", String(style === "card"));
+    $("tabClean").setAttribute("aria-pressed", String(style === "clean"));
+    Array.prototype.forEach.call($("themeTabs").querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-theme") === theme)); });
+    Array.prototype.forEach.call($("verTabs").querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-ver") === cur)); });
+    Array.prototype.forEach.call($("lenTabs").querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-len") === length)); });
+  }
+ 
+  function render() {
+    var v = vals();
+    $("email").innerHTML = style === "card" ? cardEmail(v) : cleanEmail(v);
+    $("sig").innerHTML = sigHtml();
+    $("follow").innerHTML = followHtml(v);
+    $("subject").value = "Application for " + v.position + " \u2013 " + P.name;
+    $("followSubject").value = "Following up: " + v.position + " application \u2013 " + P.name;
+    $("warn").hidden = !!$("company").value.trim();
+    $("themeTabs").hidden = style !== "card";
+ 
+    var words = plainWords(bodyParas(v).concat([closingText()]));
+    $("wc").textContent = "Body: about " + words + " words (100 se 150 behtar)";
+ 
+    var links = $("email").querySelectorAll("a[href]").length;
+    $("links").textContent = "Links in this email: " + links + (links > 8 ? ". Bohat zyada hain, kam karo." : ".");
+    $("links").className = links > 8 ? "meta bad" : "meta";
+ 
+    var note = liNote(v);
+    $("li").value = note;
+    $("liCount").textContent = note.length + " / 300 characters.";
+    $("liCount").className = note.length > 300 ? "count bad" : "count";
+ 
+    var slug = v.position.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    $("fname").textContent = "Mavia-Zindani-" + (slug || "Developer") + ".pdf";
+  }
+ 
+  /* ---------- copy helpers ---------- */
+  function flash(btn) {
+    var original = btn.getAttribute("data-label") || btn.textContent;
+    btn.setAttribute("data-label", original);
+    btn.textContent = "Copied";
+    btn.disabled = true;
+    setTimeout(function () { btn.textContent = original; btn.disabled = false; }, 1600);
+  }
+ 
+  function copyRich(el, btn) {
+    var sel = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    sel.removeAllRanges();
+    if (ok) { flash(btn); return; }
+    if (navigator.clipboard && window.ClipboardItem) {
+      navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([el.innerHTML], { type: "text/html" }),
+        "text/plain": new Blob([el.innerText], { type: "text/plain" })
+      })]).then(function () { flash(btn); }).catch(function () { btn.textContent = "Copy failed. Select the preview and press Cmd+C"; });
+    } else {
+      btn.textContent = "Copy failed. Select the preview and press Cmd+C";
+    }
+  }
+ 
+  function copyField(el, btn) {
+    function fallback() {
+      el.hidden = false; el.select();
+      try { if (document.execCommand("copy")) flash(btn); } catch (e) {}
+      if (el.id === "followSubject") el.hidden = true;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(el.value).then(function () { flash(btn); }).catch(fallback);
+    } else { fallback(); }
+  }
+ 
+  /* ---------- wiring ---------- */
+  load();
+  profileToInputs();
+  renderSkills();
+  syncTabs();
+ 
+  ["position", "resume", "p1n", "p1l", "p1d", "p2n", "p2l", "p2d", "p3n", "p3l", "p3d"].forEach(function (id) {
+    $(id).addEventListener("input", function () { inputsToProfile(); render(); save(); });
+  });
+  ["company", "greet", "why", "proof", "sent"].forEach(function (id) {
+    $(id).addEventListener("input", render);
+  });
+ 
+  Array.prototype.forEach.call($("verTabs").querySelectorAll("button"), function (b) {
+    b.addEventListener("click", function () {
+      inputsToProfile();
+      cur = b.getAttribute("data-ver");
+      profileToInputs(); renderSkills(); syncTabs(); render(); save();
+    });
+  });
+  Array.prototype.forEach.call($("lenTabs").querySelectorAll("button"), function (b) {
+    b.addEventListener("click", function () { length = b.getAttribute("data-len"); syncTabs(); render(); save(); });
+  });
+  Array.prototype.forEach.call($("themeTabs").querySelectorAll("button"), function (b) {
+    b.addEventListener("click", function () { theme = b.getAttribute("data-theme"); syncTabs(); render(); save(); });
+  });
+  $("tabCard").addEventListener("click", function () { style = "card"; syncTabs(); render(); save(); });
+  $("tabClean").addEventListener("click", function () { style = "clean"; syncTabs(); render(); save(); });
+ 
+  $("copyEmail").addEventListener("click", function () { copyRich($("email"), this); });
+  $("copySig").addEventListener("click", function () { copyRich($("sig"), this); });
+  $("copyFollow").addEventListener("click", function () { copyRich($("follow"), this); });
+  $("copySubject").addEventListener("click", function () { copyField($("subject"), this); });
+  $("copyFollowSubject").addEventListener("click", function () { copyField($("followSubject"), this); });
+  $("copyLi").addEventListener("click", function () { copyField($("li"), this); });
+ 
+  render();
+})();
+</script>
+</body>
+</html>
